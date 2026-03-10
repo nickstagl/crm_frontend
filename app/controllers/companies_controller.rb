@@ -7,6 +7,11 @@ class CompaniesController < ApplicationController
   def show
     @company = Company.find_by({ "id" => params["id"] })
     @contacts = Contact.where({ "company_id" => @company["id"] })
+    contact_ids = @contacts.map { |c| c["id"] }
+    @activities = Activity.where(contact_id: contact_ids).order(created_at: :desc)
+    @users = User.all
+    @contacts_by_id = @contacts.index_by(&:id)
+    @users_by_id = @users.index_by(&:id)
   end
 
   def new
